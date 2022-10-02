@@ -1,0 +1,26 @@
+---
+title: "Homework 2"
+author: "Mayuri Albal"
+date: "2022-09-30"
+output: github_document
+---
+```{r}
+
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+library(readxl)
+```
+
+```{r}
+nyc_transit =read_csv('/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv',
+      col_types=cols(Route8 ='c', Route9 ='c', Route10 ='c', Route11 ='c'))
+```
