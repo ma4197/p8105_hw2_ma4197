@@ -89,3 +89,12 @@ nyc_transit %>%
   distinct
 ```
 Of the 60 distinct stations that serve the A train, 17 are ADA compliant.
+
+##Problem 2
+
+```{r}
+mr_trash_wheel = read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+    sheet = "Mr. Trash Wheel")
+View(mr_trash_wheel)
+```
+
