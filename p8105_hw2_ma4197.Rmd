@@ -129,6 +129,8 @@ trash_wd_tidy =
 ```
 
 ##Problem 3
+
+###Pols-Month Data Cleaning
 ```{r}
 fte_pols = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/pols-month.csv") %>% 
   janitor::clean_names() %>% 
@@ -140,8 +142,33 @@ fte_pols = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/
       '11' = "november", '12' = "december"),
   prez_dem= recode(prez_dem, "1"= "democrat" ),
   prez_gop= recode (prez_gop, "1"= "republican")) %>% 
-  
-  
-
+  pivot_longer(cols= c("prez_dem", "prez_gop"),
+               values_to= "president") %>% 
+  drop_na ("president") %>% 
+  select(-day)
 view(fte_pols)
+```
+
+
+###SNP Data Cleaning
+```{r}
+fte_snp = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/snp.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate( 
+    date = as.Date((date = "%m/%d/%y"))) %>% 
+  anydate("1/2/51")
+  separate(date, c("year", "month", "day"), sep = "-") %>% 
+mutate(
+  month = recode(month,
+      '01' = "january", '02'= "february", '03'= "march", '04'= "april", '05'= "may",
+      '06'= "june", '07'= "july", '08'= "august", '09'= "september", '10'= "october", 
+      '11' = "november", '12' = "december"))
+  head(arrange(year, month))
+  select(-day)
+view(fte_snp)
+```
+
+```{r}
+install.packages("anytime")
+library("anytime")
 ```
