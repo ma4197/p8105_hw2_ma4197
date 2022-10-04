@@ -134,7 +134,14 @@ fte_pols = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/
   janitor::clean_names() %>% 
   separate(mon, c("year", "month", "day"), sep = "-") %>% 
   mutate( 
-  month = month.name[month])
+  month = recode(month,
+      '01' = "january", '02'= "february", '03'= "march", '04'= "april", '05'= "may",
+      '06'= "june", '07'= "july", '08'= "august", '09'= "september", '10'= "october", 
+      '11' = "november", '12' = "december"),
+  prez_dem= recode(prez_dem, "1"= "democrat" ),
+  prez_gop= recode (prez_gop, "1"= "republican")) %>% 
+  
+  
 
 view(fte_pols)
 ```
