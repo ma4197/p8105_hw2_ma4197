@@ -93,6 +93,7 @@ Of the 60 distinct stations that serve the A train, 17 are ADA compliant.
 
 ##Problem 2
 
+###Mr. Trash Wheel Data Set Cleaning
 ```{r}
 mr_trash_wheel = 
   read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
@@ -100,20 +101,40 @@ mr_trash_wheel =
 janitor::clean_names() %>%
   select(-x15, -x16,-x17) %>%
   drop_na(dumpster) %>%
-  select(sports_balls) %>%
-  as.numeric(sports_balls)
+  mutate(
+  sports_balls= round(sports_balls),
+  trash_wheel_data= "mrt" ) %>%
+  select(trash_wheel_data, everything()) 
 view(mr_trash_wheel)
 ```
 
+###Professor Trash Wheel Data Set Cleaning
 ```{r}
 prof_trash_wheel = 
   read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
     sheet = "Professor Trash Wheel", col_names= TRUE) %>%
 janitor::clean_names() %>%
   drop_na(dumpster) %>%
-  select(sports_balls) %>%
-  as.numeric(sports_balls)
+  mutate(
+  sports_balls= round(sports_balls),
+  trash_wheel_data= "proft") %>%
+  select(trash_wheel_data, everything()) 
 view(prof_trash_wheel)
 ```
 
+###Combining Mr. and Professor Trash Wheel Data Sets
+```{r}
+trash_wd_tidy = 
+  bind_rows(mr_trash_wheel,prof_trash_wheel) 
+```
+
 ##Problem 3
+```{r}
+fte_pols = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/pols-month.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(mon, c("year", "month", "day"), sep = "-") %>% 
+  mutate( 
+  month = month.name[month])
+
+view(fte_pols)
+```
