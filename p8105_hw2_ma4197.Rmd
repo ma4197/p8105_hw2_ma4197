@@ -106,6 +106,7 @@ janitor::clean_names() %>%
   trash_wheel_data= "mrt" ) %>%
   select(trash_wheel_data, everything()) 
 view(mr_trash_wheel)
+skimr::skim(mr_trash_wheel)
 ```
 
 ###Professor Trash Wheel Data Set Cleaning
@@ -120,12 +121,13 @@ janitor::clean_names() %>%
   trash_wheel_data= "proft") %>%
   select(trash_wheel_data, everything()) 
 view(prof_trash_wheel)
+skimr::skim(prof_trash_wheel)
 ```
 
 ###Combining Mr. and Professor Trash Wheel Data Sets
 ```{r}
-trash_wd_tidy = 
-  bind_rows(mr_trash_wheel,prof_trash_wheel) 
+trash_wd_tidy = bind_rows(mr_trash_wheel, prof_trash_wheel) %>% 
+  janitor:: clean_names()
 ```
 
 ##Problem 3
@@ -151,24 +153,28 @@ view(fte_pols)
 
 
 ###SNP Data Cleaning
+Notes: fix character string
 ```{r}
-fte_snp = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/snp.csv") %>% 
+fte_snsnp = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/snp.csv") %>% 
   janitor::clean_names() %>% 
-  mutate( 
+  ftefteftemutate( 
     date = as.Date((date = "%m/%d/%y"))) %>% 
-  anydate("1/2/51")
+    date = as.Date(format(date)) %>%
   separate(date, c("year", "month", "day"), sep = "-") %>% 
 mutate(
   month = recode(month,
       '01' = "january", '02'= "february", '03'= "march", '04'= "april", '05'= "may",
       '06'= "june", '07'= "july", '08'= "august", '09'= "september", '10'= "october", 
-      '11' = "november", '12' = "december"))
-  head(arrange(year, month))
+      '11' = "november", '12' = "december")) %>%
+  arrange(year, month)
   select(-day)
 view(fte_snp)
 ```
-
+###Cleaning the Unemployment Data
 ```{r}
-install.packages("anytime")
-library("anytime")
+fte_unem = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/unemployment.csv") %>% 
+  janitor::clean_names() %>% 
+pivot_longer(jan:dec, names_to = "month") %>% 
+  fte_unem$year <- as.character(fte_unem$year)
+view(fte_unem)
 ```
