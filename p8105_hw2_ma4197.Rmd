@@ -221,4 +221,3 @@ The data set "fte_unem" had 816 observations and 3 variables, after cleaning of 
 FTE_MERGE
 This data set was a combination of "fte_pols" and "fte_snp", with the later merging of 'fte_unem. It contained 817 observations and 11 variables. The variables contained in the set were: 'year','month','gov_gop','gov_dem','sen_gop', 'sen_dem', 'rep_gop', 'rep_dem', 'president', 'close', and 'value. The data set ranged from 1947-2015, however the data for 
 variables 'close' ranged from 1950-2015, and 1948-2015 for 'value'. This data set provided a combined set of all the selected sets to allow for an understanding of governmental political parties in power and their relation to the stock market as well as unemployment rates.
-
