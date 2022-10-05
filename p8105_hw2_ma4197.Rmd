@@ -15,12 +15,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(dplyr)
-```
-
-```{r}
 library(readxl)
 ```
 
+#Problem 1
 ```{r}
 nyc_transit =read_csv('/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv',
       col_types=cols(Route8 ='c', Route9 ='c', Route10 ='c', Route11 ='c'))
@@ -96,12 +94,13 @@ Of the 60 distinct stations that serve the A train, 17 are ADA compliant.
 ###Mr. Trash Wheel Data Set Cleaning
 ```{r}
 mr_trash_wheel = 
-  read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+  read_excel("Trash Wheel Collection Data.xlsx", 
     sheet = "Mr. Trash Wheel", col_names= TRUE) %>%
 janitor::clean_names() %>%
-  select(-x15, -x16,-x17) %>%
+  select(-x15, -x16) %>%
   drop_na(dumpster) %>%
   mutate(
+    year = as.numeric(year),
   sports_balls= round(sports_balls),
   trash_wheel_data= "mrt" ) %>%
   select(trash_wheel_data, everything()) 
@@ -112,7 +111,21 @@ skimr::skim(mr_trash_wheel)
 ###Professor Trash Wheel Data Set Cleaning
 ```{r}
 prof_trash_wheel = 
-  read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+  read_excel("Trash Wheel Collection Data.xlsx", 
+    sheet = "Professor Trash Wheel", range= "A2:M95") %>%
+janitor::clean_names() %>%
+  drop_na(dumpster) %>%
+  mutate(
+    as.numeric(year),
+  trash_wheel_data= "proft") %>%
+  select(trash_wheel_data, everything()) 
+view(prof_trash_wheel)
+skimr::skim(prof_trash_wheel)
+```
+Old Version:
+```{r}
+prof_trash_wheel = 
+  read_excel("Trash Wheel Collection Data.xlsx", 
     sheet = "Professor Trash Wheel", col_names= TRUE) %>%
 janitor::clean_names() %>%
   drop_na(dumpster) %>%
@@ -128,6 +141,17 @@ skimr::skim(prof_trash_wheel)
 ```{r}
 trash_wd_tidy = bind_rows(mr_trash_wheel, prof_trash_wheel) %>% 
   janitor:: clean_names()
+view(trash_wd_tidy)
+skimr:: skim(trash_wd_tidy)
+```
+
+####Explanation
+In this created data set, 'trash_wd_tidy', formed from 'mr_trash_wheel' and 'prof_trash_wheel', there are 640 observations and 16 variables. 547 of the variables were
+from the 'mr_trash_wheel' data set while 93 were from the 'prof_trash_wheel' data. Some key variables include: 'weight_tons', 'volume_cubic_yards', as well as 'dumpster'. An additional variable called 'trash_wheel_data was used in order to differentiate the two data sets when combining together. However, in this updated data set, only 'mr_trash_wheel' contained the variable for sports_balls. This was not a variable in the updated 'prof_trash_wheels', thus it returned NA results in the 'trahs_wd_tidy' data set created.
+
+Total Weight of Trash Collected: Professor Trash Wheel
+```{r}
+
 ```
 
 ##Problem 3
