@@ -178,16 +178,15 @@ fte_snp = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/f
   mutate(
      date= as.Date(date,format= c("%m/%d/%y")),
      date= as.Date(ifelse(date > "2015-07-01", format(date,"19%y-%m-%d"), format(date)))) %>%
-  separate(date, c("year", "month", "date"), sep = "-") %>% 
+  separate(date, c("year", "month", "day"), sep = "-") %>% 
 mutate(
   month = recode(month,
       '01' = "january", '02'= "february", '03'= "march", '04'= "april", '05'= "may",
       '06'= "june", '07'= "july", '08'= "august", '09'= "september", '10'= "october", 
       '11' = "november", '12' = "december")) %>%
-  arrange(year, month)
-  select(-day)
+  arrange(year, month) %>% 
+  select(-day) %>% 
 view(fte_snp)
-skimr::skim(fte_snp)
 ```
 
 ```{r}
@@ -211,7 +210,10 @@ view(fte_snp)
 ```{r}
 fte_unem = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/unemployment.csv") %>% 
   janitor::clean_names() %>% 
-pivot_longer(jan:dec, names_to = "month") %>% 
-  fte_unem$year <- as.character(fte_unem$year)
+pivot_longer(jan:dec, names_to = "month")
+  
+fte_unem$year <- as.character(fte_unem$year)
 view(fte_unem)
 ```
+
+
