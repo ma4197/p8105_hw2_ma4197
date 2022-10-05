@@ -4,10 +4,6 @@ author: "Mayuri Albal"
 date: "2022-09-30"
 output: github_document
 ---
-```{r}
-
-```
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -19,18 +15,8 @@ library(readxl)
 ```
 
 #Problem 1
-```{r}
-nyc_transit =read_csv('/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv',
-      col_types=cols(Route8 ='c', Route9 ='c', Route10 ='c', Route11 ='c'))
-```
 
-```{r}
-nyc_transit %>%
-  janitor::clean_names() %>%
-select(line, station_name, station_latitude, station_longitude, entry, exit_only, vending,
-         entrance_type, ada, starts_with("route")) %>%
-  mutate(entry= ifelse(entry== 'YES', TRUE, FALSE))
-```
+###Cleaning
 ```{r}
 nyc_transit=read_csv('/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv',
       col_types=cols(Route8 ='c', Route9 ='c', Route10 ='c', Route11 ='c')) %>%
@@ -39,9 +25,12 @@ select(line, station_name, station_latitude, station_longitude, entry, exit_only
          entrance_type, ada, starts_with("route")) %>%
   mutate(entry= ifelse(entry== 'YES', TRUE, FALSE))
 ```
+
+####Explanation
 Currently the data set contains the variables: line, station name, station latitude, station longitude, routes served (1-11), entry, vending, entrance type, as well as if the station is ADA compliant. In order to get to this data set, it was essential to clean the variable names from the way they were converted in order to be interpretable for R. After this, the variables that were intended to be analysed were 'selected' from the data set to be used. Lastly, the variable entry was altered in order have it read as a logic variable rather than a character
 variable, thus yes was interpreted as True, and no as False. The data is not currently 'tidy' at this point as route is still appearing as NA due to its format and thus unusable until it is altered. There are currently 20 columns and 1,868 rows in the current dataset.
 
+####Distinct Stations
 ```{r}
 nyc_transit%>%
   select(station_name,line) %>%
@@ -49,6 +38,7 @@ distinct
 ```
 There are 465 distinct stations.
 
+####ADA Compliance
 ```{r}
 nyc_transit %>% 
   filter(ada == TRUE) %>% 
@@ -57,6 +47,7 @@ nyc_transit %>%
 ```
 Of the 465 distinct stations, 84 are ADA compliant.
 
+####Proportion of Allowed Entrances
 ```{r}
 nyc_transit %>% 
   filter(vending == "NO") %>% 
@@ -65,6 +56,7 @@ nyc_transit %>%
 ```
  The proportion of entrances/exits without vending allowed entrance is 0.377.
 
+####Serve 'A' Train
 ```{r}
 nyc_transit %>% 
   pivot_longer(
@@ -77,6 +69,7 @@ nyc_transit %>%
 ```
 60 distinct stations serve the A train.
 
+####Serve 'A' Train and ADA compliant
 ```{r}
 nyc_transit %>% 
   pivot_longer(
@@ -135,13 +128,13 @@ skimr:: skim(trash_wd_tidy)
 In this created data set, 'trash_wd_tidy', formed from 'mr_trash_wheel' and 'prof_trash_wheel', there are 641 observations and 16 variables. 547 of the variables were
 from the 'mr_trash_wheel' data set while 94 were from the 'prof_trash_wheel' data. Some key variables include: 'weight_tons', 'volume_cubic_yards', as well as 'dumpster'. An additional variable called 'trash_wheel_data was used in order to differentiate the two data sets when combining together. However, in this updated data set, only 'mr_trash_wheel' contained the variable for sports_balls. This was not a variable in the updated 'prof_trash_wheels', thus it returned NA results in the 'trash_wd_tidy' data set created.
 
-Total Weight of Trash Collected: Professor Trash Wheel
+####Total Weight of Trash Collected: Professor Trash Wheel
 ```{r}
 sum(prof_trash_wheel$weight_tons)
 ```
 The total weight of trash collected by Professor Trash Wheel was 190.12 tons.
 
-Number of Sports Balls: Mr. Trash Wheel
+####Number of Sports Balls: Mr. Trash Wheel
 ```{r}
 sum(mr_trash_wheel$sports_balls)
 sum(subset(mr_trash_wheel, year== '2020' )$sports_balls)
@@ -168,7 +161,6 @@ fte_pols = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/
   select(-day,-name)
 view(fte_pols)
 ```
-
 
 ###SNP Data Cleaning
 ```{r}
@@ -199,7 +191,6 @@ view(fte_unem)
 ```
 
 ###Merge fte_pols and fte_snp, as well as fte_unem
-
 ```{r}
 fte_pols_snp=
   left_join(fte_pols, fte_snp, by= c("year", "month"))
