@@ -165,13 +165,12 @@ fte_pols = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/
   pivot_longer(cols= c("prez_dem", "prez_gop"),
                values_to= "president") %>% 
   drop_na ("president") %>% 
-  select(-day)
+  select(-day,-name)
 view(fte_pols)
 ```
 
 
 ###SNP Data Cleaning
-Notes: fix character string
 ```{r}
 fte_snp = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/snp.csv") %>% 
   janitor::clean_names() %>% 
@@ -189,23 +188,6 @@ mutate(
 view(fte_snp)
 ```
 
-```{r}
-fte_snp = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/snp.csv") %>% 
-  janitor::clean_names() %>% 
-  mutate( 
-    date = as.Date((date = "%m/%d/%y")), 
-    date = as.Date(ifelse(date > "2015-07-01"), format(date, "19%-%m-%d"), format(date))) %>%
-  separate(date, c("year", "month", "day"), sep = "-") %>% 
-mutate(
-  month = recode(month,
-      '01' = "january", '02'= "february", '03'= "march", '04'= "april", '05'= "may",
-      '06'= "june", '07'= "july", '08'= "august", '09'= "september", '10'= "october", 
-      '11' = "november", '12' = "december")) %>%
-  arrange(year, month)
-  select(-day)
-view(fte_snp)
-```
-
 ###Cleaning the Unemployment Data
 ```{r}
 fte_unem = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/unemployment.csv") %>% 
@@ -216,4 +198,36 @@ fte_unem$year <- as.character(fte_unem$year)
 view(fte_unem)
 ```
 
+###Merge fte_pols and fte_snp, as well as fte_unem
+
+```{r}
+fte_pols_snp=
+  left_join(fte_pols, fte_snp, by= c("year", "month"))
+view(fte_pols_snp)
+```
+
+```{r}
+fte_merge=
+  left_join(fte_pols_snp, fte_unem, by= c("year", "month"))
+view(fte_merge)
+```
+
+####Explanation
+FTE_POLS:
+Within the "fte_pols" data set there were 817 observations and 9 variables, after completion
+of cleaning. The years in the data set ranged from 1947-2015. The variables found in
+the data set included: 'year','month','gov_gop','gov_dem','sen_gop', 'sen_dem', 'rep_gop', 'rep_dem' as well as 'president'. This data set contained data regarding the amount
+of national politicians who were either democratic or republican at any point in the data
+range.
+
+FTE_SNP:
+For the data set "fte_snp" there were 787 observations and 3 variables, after cleaning of the data. The years in the data set ranged from 1950-2015. The variables in the data set were: 'year', 'month', and 'close'. This data set contained information regarding stock market
+index closing values on the attributed date in this range.
+
+FTE_UNEM
+The data set "fte_unem" had 816 observations and 3 variables, after cleaning of data. The years in the data set ranged from 1948-2015. The variables in the data set were: 'year, 'month', and 'value'. The 'value' variable was the reported percentage of unemployment in that given month within the specified year.
+
+FTE_MERGE
+This data set was a combination of "fte_pols" and "fte_snp", with the later merging of 'fte_unem. It contained 817 observations and 11 variables. The variables contained in the set were: 'year','month','gov_gop','gov_dem','sen_gop', 'sen_dem', 'rep_gop', 'rep_dem', 'president', 'close', and 'value. The data set ranged from 1947-2015, however the data for 
+variables 'close' ranged from 1950-2015, and 1948-2015 for 'value'. This data set provided a combined set of all the selected sets to allow for an understanding of governmental political parties in power and their relation to the stock market as well as unemployment rates.
 
