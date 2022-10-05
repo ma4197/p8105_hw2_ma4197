@@ -119,13 +119,14 @@ skimr::skim(prof_trash_wheel)
 ###Combining Mr. and Professor Trash Wheel Data Sets
 ```{r}
 trash_wd_tidy = bind_rows(mr_trash_wheel, prof_trash_wheel) %>% 
-  janitor:: clean_names()
+  janitor:: clean_names() %>% 
+  select(-as_numeric_year)
 view(trash_wd_tidy)
 skimr:: skim(trash_wd_tidy)
 ```
 
 ####Explanation
-In this created data set, 'trash_wd_tidy', formed from 'mr_trash_wheel' and 'prof_trash_wheel', there are 641 observations and 16 variables. 547 of the variables were
+In this created data set, 'trash_wd_tidy', formed from 'mr_trash_wheel' and 'prof_trash_wheel', there are 641 observations and 15 variables. 547 of the variables were
 from the 'mr_trash_wheel' data set while 94 were from the 'prof_trash_wheel' data. Some key variables include: 'weight_tons', 'volume_cubic_yards', as well as 'dumpster'. An additional variable called 'trash_wheel_data was used in order to differentiate the two data sets when combining together. However, in this updated data set, only 'mr_trash_wheel' contained the variable for sports_balls. This was not a variable in the updated 'prof_trash_wheels', thus it returned NA results in the 'trash_wd_tidy' data set created.
 
 ####Total Weight of Trash Collected: Professor Trash Wheel
