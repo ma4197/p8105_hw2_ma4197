@@ -122,20 +122,6 @@ janitor::clean_names() %>%
 view(prof_trash_wheel)
 skimr::skim(prof_trash_wheel)
 ```
-Old Version:
-```{r}
-prof_trash_wheel = 
-  read_excel("Trash Wheel Collection Data.xlsx", 
-    sheet = "Professor Trash Wheel", col_names= TRUE) %>%
-janitor::clean_names() %>%
-  drop_na(dumpster) %>%
-  mutate(
-  sports_balls= round(sports_balls),
-  trash_wheel_data= "proft") %>%
-  select(trash_wheel_data, everything()) 
-view(prof_trash_wheel)
-skimr::skim(prof_trash_wheel)
-```
 
 ###Combining Mr. and Professor Trash Wheel Data Sets
 ```{r}
@@ -151,8 +137,16 @@ from the 'mr_trash_wheel' data set while 93 were from the 'prof_trash_wheel' dat
 
 Total Weight of Trash Collected: Professor Trash Wheel
 ```{r}
-
+sum(prof_trash_wheel$weight_tons)
 ```
+The total weight of trash collected by Professor Trash Wheel was 187.14 tons.
+
+Number of Sports Balls: Mr. Trash Wheel
+```{r}
+sum(mr_trash_wheel$sports_balls)
+sum(subset(mr_trash_wheel, year== '2020' )$sports_balls)
+```
+The total number of balls collected by Mr. Trash Wheel in 2020 was 856 balls.
 
 ##Problem 3
 
