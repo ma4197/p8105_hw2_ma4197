@@ -112,7 +112,7 @@ skimr::skim(mr_trash_wheel)
 ```{r}
 prof_trash_wheel = 
   read_excel("Trash Wheel Collection Data.xlsx", 
-    sheet = "Professor Trash Wheel", range= "A2:M95") %>%
+    sheet = "Professor Trash Wheel", range= "A2:M96") %>%
 janitor::clean_names() %>%
   drop_na(dumpster) %>%
   mutate(
@@ -132,14 +132,14 @@ skimr:: skim(trash_wd_tidy)
 ```
 
 ####Explanation
-In this created data set, 'trash_wd_tidy', formed from 'mr_trash_wheel' and 'prof_trash_wheel', there are 640 observations and 16 variables. 547 of the variables were
-from the 'mr_trash_wheel' data set while 93 were from the 'prof_trash_wheel' data. Some key variables include: 'weight_tons', 'volume_cubic_yards', as well as 'dumpster'. An additional variable called 'trash_wheel_data was used in order to differentiate the two data sets when combining together. However, in this updated data set, only 'mr_trash_wheel' contained the variable for sports_balls. This was not a variable in the updated 'prof_trash_wheels', thus it returned NA results in the 'trahs_wd_tidy' data set created.
+In this created data set, 'trash_wd_tidy', formed from 'mr_trash_wheel' and 'prof_trash_wheel', there are 641 observations and 16 variables. 547 of the variables were
+from the 'mr_trash_wheel' data set while 94 were from the 'prof_trash_wheel' data. Some key variables include: 'weight_tons', 'volume_cubic_yards', as well as 'dumpster'. An additional variable called 'trash_wheel_data was used in order to differentiate the two data sets when combining together. However, in this updated data set, only 'mr_trash_wheel' contained the variable for sports_balls. This was not a variable in the updated 'prof_trash_wheels', thus it returned NA results in the 'trash_wd_tidy' data set created.
 
 Total Weight of Trash Collected: Professor Trash Wheel
 ```{r}
 sum(prof_trash_wheel$weight_tons)
 ```
-The total weight of trash collected by Professor Trash Wheel was 187.14 tons.
+The total weight of trash collected by Professor Trash Wheel was 190.12 tons.
 
 Number of Sports Balls: Mr. Trash Wheel
 ```{r}
@@ -173,11 +173,29 @@ view(fte_pols)
 ###SNP Data Cleaning
 Notes: fix character string
 ```{r}
-fte_snsnp = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/snp.csv") %>% 
+fte_snp = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/snp.csv") %>% 
   janitor::clean_names() %>% 
-  ftefteftemutate( 
-    date = as.Date((date = "%m/%d/%y"))) %>% 
-    date = as.Date(format(date)) %>%
+  mutate(
+     date= as.Date(date,format= c("%m/%d/%y")),
+     date= as.Date(ifelse(date > "2015-07-01", format(date,"19%y-%m-%d"), format(date)))) %>%
+  separate(date, c("year", "month", "date"), sep = "-") %>% 
+mutate(
+  month = recode(month,
+      '01' = "january", '02'= "february", '03'= "march", '04'= "april", '05'= "may",
+      '06'= "june", '07'= "july", '08'= "august", '09'= "september", '10'= "october", 
+      '11' = "november", '12' = "december")) %>%
+  arrange(year, month)
+  select(-day)
+view(fte_snp)
+skimr::skim(fte_snp)
+```
+
+```{r}
+fte_snp = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/snp.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate( 
+    date = as.Date((date = "%m/%d/%y")), 
+    date = as.Date(ifelse(date > "2015-07-01"), format(date, "19%-%m-%d"), format(date))) %>%
   separate(date, c("year", "month", "day"), sep = "-") %>% 
 mutate(
   month = recode(month,
@@ -188,6 +206,7 @@ mutate(
   select(-day)
 view(fte_snp)
 ```
+
 ###Cleaning the Unemployment Data
 ```{r}
 fte_unem = read_csv("/Users/mayurialbal/Documents/Data Science/Homework/HW2/HW2/fivethirtyeight_datasets/unemployment.csv") %>% 
